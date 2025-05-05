@@ -32,7 +32,7 @@ public class MetadataItems{
                 } 
                 //  System.debug( i +'i');
                 return fileProperties;
-            }
+            }  
         }
         catch(exception e){
             e.getMessage();
