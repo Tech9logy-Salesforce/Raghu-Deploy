@@ -39,17 +39,5 @@ public class MetadataItems{
         } 
         return null; 
     }
-        /**
-    * @description createService   * @return service  
-    */  
-    
-    public static MetadataService.MetadataPort createService(){ 
-        MetadataService.MetadataPort service = new MetadataService.MetadataPort();
-        service.SessionHeader = new MetadataService.SessionHeader_element(); 
-        if(!test.isRunningTest()){
-            service.SessionHeader.sessionId = GetSessionId.getUserSessionId();
-        }
-         
-        return service;		
-    }
+     
 }
