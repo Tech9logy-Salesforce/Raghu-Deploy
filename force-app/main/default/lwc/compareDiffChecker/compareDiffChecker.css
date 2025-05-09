@@ -1,0 +1,306 @@
+/* Streamlined CSS for Compare Diff. Checker LWC */
+
+/* Layout Containers */
+.container {
+  height: 65vh;
+  cursor: pointer;
+}
+
+.selectOrg {
+  display: flex;
+  gap: 30px;
+}
+
+.sub-select-org {
+  flex: 1;
+}
+
+.search {
+  display: flex;
+  gap: 30px;
+}
+
+.search-container {
+  flex: 1;
+  position: relative;
+  /* for absolute-positioned dropdown */
+}
+
+/* Buttons Section */
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 35px 20px;
+  padding: 15px 20px;
+}
+
+/* Loading Spinner Overlay */
+.spinner-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(169, 164, 164, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Dropdown Lists */
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #dcdcdc;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.dropdown-item {
+  padding: 0.6rem 1rem;
+  font-family: "Poppins", sans-serif;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #007bff;
+  color: #fff;
+  transform: scale(1.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Code Comparison Boxes */
+.outer-code-box {
+  display: flex;
+  height: 48vh;
+  margin: 20px 0;
+}
+
+.code-box {
+  flex: 1;
+  height: 46vh;
+  border: 2px solid #a68888;
+  border-radius: 4px;
+  padding: 3px;
+  overflow: auto;
+  background-color: #f8f8f8;
+  font-family: monospace;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.code-box:last-child {
+  border-right: none;
+}
+
+.line-container {
+  display: flex;
+  align-items: flex-start;
+  font-family: monospace;
+  font-size: 15px;
+  line-height: 1.2;
+  padding: 0;
+  margin: 0;
+}
+
+.line-number {
+  min-width: 3rem;
+  text-align: right;
+  padding-right: 5px;
+  color: #888;
+  user-select: none;
+}
+
+/* Diff Highlighting */
+.added {
+  /* background-color: #d4f8d4; */
+  background-color: #d4f8d4;
+  color: #256029;
+}
+
+.removed {
+  /* background-color: #f8d4d4; */
+  background-color: #f8d4d4  ;
+  color: #a12828;
+}
+
+.unchanged {}
+
+/* Summary Badges */
+.add-removals {
+  display: flex;
+  justify-content: flex-start;
+  gap: 39rem;
+  position: relative;
+  top: 18px;
+  margin-bottom: 0;
+  font-size: 1rem;
+}
+
+.removals-badge,
+.additions-badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.removals-badge {
+  background-color: #ffe5e5;
+  color: #b22222;
+}
+
+.additions-badge {
+  background-color: #e5ffe5;
+  color: #228b22;
+}
+
+/* Inline Labels */
+.removal-label {
+  color: #a12828;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.removal-label::before {
+  content: '–';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.5rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 50%;
+  background-color: #fcd2d2;
+  color: #a12828;
+  font-weight: bold;
+}
+
+
+
+/*  */
+.addition-label {
+  color: #256029;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.addition-label::before {
+  content: '+';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.5rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 50%;
+  background-color: #c3edc3;
+  color: #256029;
+  font-weight: bold;
+}
+
+/* Modal Content Override */
+.slds-modal__content {
+  overflow-y: auto;
+  max-height: calc(100% - 7rem);
+}
+
+/* LWC vs Aura Comparison */
+.diff-container {
+  display: flex;
+  gap: 1rem;
+}
+
+/* File-Level Summary */
+.showCount {
+  display: flex;
+  gap: 50rem;
+  font-size: 1rem;
+}
+
+/* Section Headings */
+h2 {
+  font-weight: 520;
+  font-size: 15px;
+}
+
+.pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.pane-title {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.file-name{
+  display: flex;
+  gap: 45rem;
+}
+
+
+/* Responsive Styles */
+@media (max-width: 1400px) {
+  .add-removals, .showCount, .file-name { gap: 30rem; }
+  .showCount { gap: 36rem; }
+  .code-box { height: 40vh; }
+}
+
+@media (max-width: 1200px) {
+  .add-removals, .showCount, .file-name { gap: 28rem; }
+  .showCount { gap: 33rem; }
+  .code-box { height: 40vh; }
+}
+
+@media (max-width: 1100px) { /* New breakpoint */
+  .add-removals, .file-name {
+    gap: 24rem;
+    
+  }
+  .showCount {
+    gap: 30rem;
+    
+  }
+  .code-box {
+    min-width: 45%; /* Prevent overflow */
+  }
+}
+
+@media (max-width: 992px) {
+  .add-removals,.file-name { gap: 20rem; }
+  .showCount { gap: 26rem; }
+  .outer-code-box { height: auto; flex-direction: column; gap: 20px; }
+  .code-box { height: 35vh; width: 100%; }
+  .selectOrg, .search { flex-direction: column; }
+  .buttons { flex-wrap: wrap; margin: 20px 0; padding: 10px; }
+}
+
+@media (max-width: 768px) {
+  .container { height: auto; padding: 15px; }
+  .add-removals, .file-name { gap: 15rem; flex-direction: row; }
+  .showCount{ gap: 19rem; flex-direction: row; }
+  .code-box { height: 30vh; font-size: 13px; }
+  .line-container { font-size: 13px; }
+  .dropdown-item { padding: 1rem; min-height: 44px; }
+  .buttons { gap: 15px; margin: 15px 0; }
+  .pane-title { font-size: 0.9rem; }
+  .removals-badge, .additions-badge { font-size: 0.8rem; }
+}
+
+@media (max-width: 576px) {
+  .code-box { height: 25vh; }
+  .line-number { min-width: 2rem; }
+  .slds-modal__container { width: 95% !important; margin: 0 auto; }
+  .dropdown { max-height: 150px; }
+}

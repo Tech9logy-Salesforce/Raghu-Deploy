@@ -1,0 +1,322 @@
+<template>
+
+    <lightning-card title="Compare Diff. Checker" icon="utility:Home">
+
+        <template if:true={isLoading}>
+            <div class="spinner-container">
+                <lightning-spinner alternative-text="Loading" class="isLoading"></lightning-spinner>
+            </div>
+        </template>
+        <template if:true={isLoading2}>
+            <div class="spinner-container">
+                <lightning-spinner alternative-text = "Loading" class="isLoading"></lightning-spinner>
+            </div>
+        </template>
+
+
+        <div class="container"> 
+
+            <lightning-combobox name="progress" label="Select Metadata To Compare" value={value}
+                placeholder="Select Metadata Type" options={options} onchange={handleChange}>
+            </lightning-combobox>
+
+
+            <!-- Search Bar div : Starts  -->
+            <div class="search">
+                <div class="search-container">
+                    <!-- <h3>Choose {metadataLabel} of Source Org</h3> -->
+                    <div class="migo-table-common" if:true={isShowTable}>
+                        <lightning-input name="Search" autocomplete="off" style="" type="search" label={metadataLabel}
+                            value={optionSelect} onchange={handleSearchChange} onfocus={handleClick} class="lable-none">
+                        </lightning-input>
+
+
+                        <!-- Dropdown list for filtered options -->
+                        <template if:true={showEmailDropdown}>
+                            <div class="dropdown">
+                                <template for:each={filterList} for:item="option">
+                                    <div key={option} class="dropdown-item" data-value={option}
+                                        onclick={handleOptionSelect}>
+                                        {option}
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+
+                        <template if:true={showDropdown}>
+                            <div class="dropdown">
+                                <template for:each={filterList} for:item="option">
+                                    <div key={option.fullName} class="dropdown-item" data-value={option.fullName}
+                                        onclick={handleOptionSelect}>
+                                        {option.fullName}
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+
+                <div class="search-container">
+
+
+                    <!-- <h2>Choose {metadataLabel} od Source Org</h2> -->
+                    <div class="migo-table-common" if:true={isShowSideDropdown}>
+                        <lightning-input name="Search" autocomplete="off" style="" type="search" label={metadataLabel2}
+                            value={optionSelect2} onchange={handleSearchChange2} onfocus={handleClick2}
+                            class="lable-none">
+                        </lightning-input>
+
+                        <!-- Dropdown list for filtered options -->
+                        <template if:true={showEmailDropdown2}>
+                            <div class="dropdown">
+                                <template for:each={filterList2} for:item="option">
+                                    <div key={option} class="dropdown-item" data-value={option}
+                                        onclick={handleOptionSelect2}>
+                                        {option}
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+
+                        <template if:true={showDropdown2}>
+                            <div class="dropdown">
+                                <template for:each={filterList2} for:item="option">
+                                    <div key={option.fullName} class="dropdown-item" data-value={option.fullName}
+                                        onclick={handleOptionSelect2}>
+                                        {option.fullName}
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                <!-- Search Bar div : Starts  -->
+            </div>
+
+
+
+
+            <div class="outer-code-box" if:true={isShowDiv}>
+                <div class="code-box" onscroll={handleScroll}>
+                    {dataContent}
+                </div>
+                <div class="code-box" onscroll={handleScroll}>
+                    {dataContent2}
+                </div>
+            </div>
+
+
+
+
+            <div class="add-removals" if:true={isShowComparision}>
+                <div class="removals-badge">
+                    <span class="removal-label"></span>
+                    {removalsCount} removals
+                </div>
+                <div class="additions-badge">
+                    <span class="addition-label"></span>
+                    {additionsCount} additions
+                </div>
+            </div>
+
+            <!-- Show Comparision : starts -->
+            <div class="outer-code-box" if:true={isShowComparision}>
+                <div class="code-box" onscroll={handleScroll}>
+                    <template for:each={originalLines} for:item="line">
+                        <div key={line.key} class="line-container">
+                            <span class="line-number">{line.lineNumber}</span>
+                            <span class={line.className}>{line.text}</span>
+                        </div>
+                    </template>
+                </div>
+                <div class="code-box" onscroll={handleScroll}>
+                    <template for:each={modifiedLines} for:item="line">
+                        <div key={line.key} class="line-container">
+                            <span class="line-number">{line.lineNumber}</span>
+                            <span class={line.className}>{line.text}</span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            <!-- Show Comparision : starts -->
+
+
+
+            <!-- Buttons starts here : start -->
+            <div class="buttons">
+                <template if:true={isShowResetBtn}>
+                    <lightning-button variant="brand" label="Reset" onclick={resetCodeHandler}
+                        class="slds-m-left_x-small"></lightning-button>
+                </template>
+
+                <template if:true={isShowCompareBtn}>
+                    <lightning-button variant="brand" label="Compare" onclick={compareCode}
+                        class="slds-m-left_x-small"></lightning-button>
+                </template>
+
+                <lightning-button variant="Success" label="Compare Properties" onclick={compareProperties}
+                    class="slds-m-left_x-small"></lightning-button>
+            </div>
+            <!-- Buttons Ends here : End -->
+
+
+
+
+            <!--For Comparing Lwc and Aura : starts  -->
+            <div class="diff‑wrapper">
+                <template if:true={isShowLwcAuraComparision}>
+                    <template for:each={comparisonResult} for:item="cmp">
+                        <section key={cmp.id} class="file-diff-section">
+                            <!-- <h2>
+                    {cmp.fileName} 
+                </h2> -->
+                            <div class="file-name">
+                                <div class="name-files">
+                                    <h3 class="pane-title">{cmp.leftName} ➡️</h3>
+                                </div>
+                                <div class="name-files">
+                                    <h3 class="pane-title">{cmp.rightName} ➡️</h3>
+                                </div>
+                            </div>
+                            <div class="showCount">
+                                <div class="removals-badge">
+                                    <span class="removal-label"></span>
+                                    {cmp.removalsCount}
+                                </div>
+                                <div class="additions-badge">
+                                    <span class="addition-label"></span>
+                                    {cmp.additionsCount}
+                                </div>
+                            </div>
+
+                            <div class="diff-container">
+                                <div class="code-box" onscroll={handleScroll2}>
+                                    <template for:each={cmp.originalLines} for:item="line">
+                                        <div key={line.key} class="line-container">
+                                            <span class="line-number">{line.lineNumber}</span>
+                                            <span class={line.className}>{line.text}</span>
+                                        </div>
+
+                                    </template>
+                                </div>
+
+                                <div class="code-box" onscroll={handleScroll2}>
+
+                                    <template for:each={cmp.modifiedLines} for:item="line">
+                                        <div key={line.key} class="line-container">
+                                            <span class="line-number">{line.lineNumber}</span>
+                                            <span class={line.className}>{line.text}</span>
+                                        </div>
+
+                                    </template>
+                                </div>
+
+                            </div>
+                        </section>
+
+
+                    </template>
+                </template>
+            </div>
+            <!--For Comparing Lwc and Aura : Ends  -->
+
+
+
+
+        </div>
+
+
+        <!-- LWC model starts -->
+        <template if:true={isShowLwcModel}>
+            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <h2 class="slds-text-heading_medium">Select Files to Compare</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <lightning-input type="checkbox" label="Select All" checked={selectAllLwc} data-filetype=""
+                            onchange={handleLwcSelectAll}></lightning-input>
+                        <lightning-input type="checkbox" label="CSS" data-filetype="css" checked={selectedFiles.css}
+                            onchange={handleFileSelection}></lightning-input>
+                        <lightning-input type="checkbox" label="HTML" data-filetype="html" checked={selectedFiles.html}
+                            onchange={handleFileSelection}></lightning-input>
+                        <lightning-input type="checkbox" label="JavaScript" data-filetype="js"
+                            checked={selectedFiles.js} onchange={handleFileSelection}></lightning-input>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <lightning-button variant="neutral" label="Close" onclick={handleClose}></lightning-button>
+                        <lightning-button variant="brand" label="Proceed" onclick={handleProceed}></lightning-button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+
+        <!-- <template if:true={isShowLwcComparision}> 
+        </template>
+        LWC model starts -->
+
+
+        <!-- Aura dropdown starts -->
+        <template if:true={isAuraModalOpen}>
+            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <h2 class="slds-text-heading_medium">Select Aura Files</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <lightning-input type="checkbox" label="Select All" checked={selectAllAura}
+                            onchange={handleAuraSelectAll} data-name=""></lightning-input>
+                        <lightning-input type="checkbox" label="CSS (.css)" onchange={handleAuraSelection}
+                            checked={selectedFiles.css} data-name="css"></lightning-input>
+                        <lightning-input type="checkbox" label="Design (.design)" onchange={handleAuraSelection}
+                            checked={selectedFiles.design} data-name="design"></lightning-input>
+                        <lightning-input type="checkbox" label="Renderer (.js)" onchange={handleAuraSelection}
+                            checked={selectedFiles.auraRenderer} data-name="renderer"></lightning-input>
+                        <lightning-input type="checkbox" label="Aura Helper (.js)" onchange={handleAuraSelection}
+                            checked={selectedFiles.auraHelper} data-name="auraHelper"></lightning-input>
+                        <lightning-input type="checkbox" label="Aura Controller (.js)" onchange={handleAuraSelection}
+                            checked={selectedFiles.auraController} data-name="auraController"></lightning-input>
+                        <lightning-input type="checkbox" label="Aura Component (.cmp)" onchange={handleAuraSelection}
+                            checked={selectedFiles.auraComponent} data-name="auraComponent"></lightning-input>
+                    </div>
+
+                    <footer class="slds-modal__footer">
+                        <lightning-button variant="neutral" label="Close" onclick={closeAuraModal}></lightning-button>
+                        <lightning-button variant="brand" label="Proceed" onclick={handleProceed}></lightning-button>
+                    </footer>
+
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+
+        </template>
+        <!-- Aura dropdown Ends -->
+
+        <!-- Compare Properties : Starts -->
+        <template if:true={isShowPropertiesPopUp}>
+            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <h2 class="slds-text-heading_medium">Select Files to Compare</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium">
+
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <lightning-button variant="neutral" label="Close"
+                            onclick={handleClosePropertiesPopUp}></lightning-button>
+                        <!-- <lightning-button variant="brand" label="Proceed" onclick={handleProceed}></lightning-button> -->
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+        <!-- Compare Properties : Ends -->
+
+
+    </lightning-card>
+
+</template>
